@@ -21,6 +21,9 @@ public class Ticket {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(unique = true, nullable = true)
+    private String ticketNumber;
+
     @ManyToOne(optional = false)
     private User user;
 

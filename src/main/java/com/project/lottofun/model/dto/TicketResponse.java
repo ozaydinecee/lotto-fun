@@ -18,14 +18,30 @@ public class TicketResponse {
     private LocalDateTime purchaseTime;
     private BigDecimal prizeAmount;
     private String status;
+    private String ticketNumber;
 
+    // after draw ended
+    private Set<Integer> winningNumbers;
+    private Integer matchCount;
+    private String drawStatus;
     public TicketResponse(Ticket ticket) {
         this.ticketId = ticket.getId();
+        this.ticketNumber = ticket.getTicketNumber();
         this.drawNumber = ticket.getDraw().getDrawNumber();
         this.selectedNumbers = ticket.getSelectedNumbers();
         this.purchaseTime = ticket.getPurchaseTime();
         this.prizeAmount = ticket.getPrizeAmount();
-        this.status = String.valueOf(ticket.getStatus()); // Enum ise string'e çevir
-    }
+        this.status = String.valueOf(ticket.getStatus());
 
+        if (ticket.getDraw() != null) {
+            this.drawStatus = String.valueOf(ticket.getDraw().getStatus());
+            if (ticket.getDraw().getWinningNumbers() != null) {
+                this.winningNumbers = ticket.getDraw().getWinningNumbers();
+                this.matchCount = (int) ticket.getSelectedNumbers().stream()
+                        .filter(ticket.getDraw().getWinningNumbers()::contains)
+                        .count();
+            }
+        }
+    }
 }
+

@@ -12,6 +12,7 @@ import com.project.lottofun.model.enums.TicketStatus;
 import com.project.lottofun.repository.DrawRepository;
 import com.project.lottofun.repository.TicketRepository;
 import com.project.lottofun.repository.UserRepository;
+import com.project.lottofun.service.interfaces.DrawService;
 import com.project.lottofun.validator.DrawLifeCycleValidator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -45,6 +46,9 @@ class TicketServiceImplTest {
     @Mock
     private DrawLifeCycleValidator drawLifecycleValidator;
 
+    @Mock
+    private DrawService drawService;
+
     @InjectMocks
     private TicketServiceImpl ticketService;
 
@@ -72,8 +76,7 @@ class TicketServiceImplTest {
         Set<Integer> numbers = Set.of(5, 12, 23, 37, 48);
         TicketPurchaseRequest request = new TicketPurchaseRequest(numbers);
 
-        when(drawRepository.findTopByStatusOrderByDrawDateAsc(DrawStatus.DRAW_OPEN))
-                .thenReturn(Optional.of(testDraw));
+        when(drawService.getActiveDraw()).thenReturn(testDraw);
 
         when(userRepository.findById(1L)).thenReturn(Optional.of(testUser));
         Mockito.doNothing().when(drawLifecycleValidator).validateForTicketPurchase(any());
@@ -107,8 +110,8 @@ class TicketServiceImplTest {
     void purchaseTicket_insufficientBalance_throwsException() {
         testUser.setBalance(new BigDecimal("5.00")); // < 10
 
-        when(drawRepository.findTopByStatusOrderByDrawDateAsc(DrawStatus.DRAW_OPEN))
-                .thenReturn(Optional.of(testDraw));
+        when(drawService.getActiveDraw()).thenReturn(testDraw);
+
         when(userRepository.findById(1L)).thenReturn(Optional.of(testUser));
 
         Set<Integer> numbers = Set.of(1, 2, 3, 4, 5);
@@ -124,8 +127,8 @@ class TicketServiceImplTest {
         Set<Integer> invalid = Set.of(1, 2, 3, 4); // less than 5
         TicketPurchaseRequest request = new TicketPurchaseRequest(invalid);
 
-        when(drawRepository.findTopByStatusOrderByDrawDateAsc(DrawStatus.DRAW_OPEN))
-                .thenReturn(Optional.of(testDraw));
+        when(drawService.getActiveDraw()).thenReturn(testDraw);
+
         when(userRepository.findById(1L)).thenReturn(Optional.of(testUser));
 
         assertThrows(IllegalArgumentException.class, () -> {

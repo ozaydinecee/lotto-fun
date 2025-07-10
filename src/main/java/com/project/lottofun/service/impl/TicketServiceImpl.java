@@ -6,13 +6,14 @@ import com.project.lottofun.model.dto.TicketResponse;
 import com.project.lottofun.model.entity.Draw;
 import com.project.lottofun.model.entity.Ticket;
 import com.project.lottofun.model.entity.User;
-import com.project.lottofun.model.enums.DrawStatus;
 import com.project.lottofun.model.enums.TicketStatus;
 import com.project.lottofun.repository.DrawRepository;
 import com.project.lottofun.repository.TicketRepository;
 import com.project.lottofun.repository.UserRepository;
+import com.project.lottofun.service.interfaces.DrawService;
 import com.project.lottofun.service.interfaces.TicketService;
 import com.project.lottofun.validator.DrawLifeCycleValidator;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -21,6 +22,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+@Slf4j
 @Service
 public class TicketServiceImpl implements TicketService {
 
@@ -28,17 +30,19 @@ public class TicketServiceImpl implements TicketService {
     private final UserRepository userRepository;
     private final TicketRepository ticketRepository;
     private final DrawLifeCycleValidator drawLifecycleValidator;
+    private final DrawService drawService;
 
     private static final BigDecimal TICKET_PRICE = new BigDecimal("10");
-    public TicketServiceImpl(DrawRepository drawRepository, UserRepository userRepository, TicketRepository ticketRepository, DrawLifeCycleValidator drawLifecycleValidator){
+    public TicketServiceImpl(DrawRepository drawRepository, UserRepository userRepository, TicketRepository ticketRepository, DrawLifeCycleValidator drawLifecycleValidator, DrawService drawService){
         this.drawRepository= drawRepository;
         this.userRepository = userRepository;
         this.ticketRepository = ticketRepository;
         this.drawLifecycleValidator = drawLifecycleValidator;
+        this.drawService = drawService;
     }
     @Override
     public ApiResponse<TicketResponse> purchaseTicket(Long userId, TicketPurchaseRequest request) {
-        Draw activeDraw = getActiveDraw();
+        Draw activeDraw = drawService.getActiveDraw();
         drawLifecycleValidator.validateForTicketPurchase(activeDraw);
 
         User user = getUser(userId);
@@ -74,14 +78,6 @@ public class TicketServiceImpl implements TicketService {
         return new ApiResponse<>(true, "Tickets for draw retrieved", responses);
     }
 
-    private Draw getActiveDraw() {
-       Draw draw= drawRepository.findTopByStatusOrderByDrawDateAsc(DrawStatus.DRAW_OPEN)
-                .orElseThrow(() -> new IllegalStateException("No active draw available"));
-        if (draw.getDrawDate().isBefore(LocalDateTime.now())) {
-            throw new IllegalStateException("Draw is closed. Ticket purchase is not allowed.");
-        }
-        return draw;
-    }
 
     private User getUser(Long userId) {
         return userRepository.findById(userId)
@@ -116,7 +112,10 @@ public class TicketServiceImpl implements TicketService {
     }
 
     private Ticket createTicket(User user, Draw draw, Set<Integer> numbers) {
+        String ticketNumber = generateTicketNumber(user, draw);
+
         Ticket ticket = Ticket.builder()
+                .ticketNumber(ticketNumber)
                 .user(user)
                 .draw(draw)
                 .status(TicketStatus.PENDING)
@@ -124,6 +123,9 @@ public class TicketServiceImpl implements TicketService {
                 .purchaseTime(LocalDateTime.now())
                 .build();
         return ticketRepository.save(ticket);
+    }
+    private String generateTicketNumber(User user, Draw draw) {
+        return user.getUsername() + "-" + draw.getDrawNumber() + "-" + System.currentTimeMillis();
     }
 
 }
