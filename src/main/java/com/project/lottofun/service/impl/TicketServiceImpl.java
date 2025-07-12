@@ -20,6 +20,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 @Slf4j
@@ -49,7 +50,15 @@ public class TicketServiceImpl implements TicketService {
 
         validateNumbers(request.getNumbers());
         validateBalance(user);
-
+        Optional<Ticket> existingTicket = findExistingTicket(user, activeDraw, request.getNumbers());
+        if (existingTicket.isPresent()) {
+            TicketResponse resp = new TicketResponse(existingTicket.get());
+            return new ApiResponse<>(
+                    true,
+                    "Ticket already purchased with these numbers; returning existing ticket",
+                    resp
+            );
+        }
         deductBalance(user);
         Ticket ticket = createTicket(user, activeDraw, request.getNumbers());
 
@@ -173,5 +182,10 @@ public class TicketServiceImpl implements TicketService {
     private String generateTicketNumber(User user, Draw draw) {
         return user.getUsername() + "-" + draw.getDrawNumber() + "-" + System.currentTimeMillis();
     }
-
+    private Optional<Ticket> findExistingTicket(User user, Draw draw, Set<Integer> numbers) {
+        return ticketRepository
+                .findAllByUserAndDraw(user, draw).stream()
+                .filter(t -> t.getSelectedNumbers().equals(numbers))
+                .findFirst();
+    }
 }

@@ -25,7 +25,7 @@ public class DefaultDrawFactory implements DrawFactory {
     public Draw createNextDraw(int previousDrawNumber) {
         Draw draw = new Draw();
         draw.setDrawNumber(previousDrawNumber + 1);
-        draw.setDrawDate(LocalDateTime.now().plusMinutes(10)); // 1 day later,10 min later
+        draw.setDrawDate(LocalDateTime.now().plusHours(2)); // 1 day later,10 min later
         draw.setStatus(DrawStatus.DRAW_OPEN);
         return draw;
     }
