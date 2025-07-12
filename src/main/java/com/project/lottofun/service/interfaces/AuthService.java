@@ -5,7 +5,8 @@ import com.project.lottofun.model.dto.UserLoginRequest;
 import com.project.lottofun.model.dto.UserRegisterRequest;
 import com.project.lottofun.model.dto.UserResponse;
 
-public interface UserService {
-    ApiResponse<UserResponse> getUserDetails(Long userId);
+public interface AuthService {
+    ApiResponse<UserResponse> register(UserRegisterRequest request);
+    ApiResponse<UserResponse>  login(UserLoginRequest request);
 
 }

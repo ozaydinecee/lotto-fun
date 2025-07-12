@@ -15,13 +15,15 @@ public class UserResponse {
     private BigDecimal balance;
 
     private List<TicketResponse> tickets;
+    private String token;
 
 
-    public UserResponse(Long id, String username, BigDecimal balance, List<TicketResponse> tickets) {
+    public UserResponse(Long id, String username, BigDecimal balance, List<TicketResponse> tickets, String token) {
         this.id = id;
         this.username = username;
         this.balance = balance;
         this.tickets = tickets;
+        this.token = token;
     }
 
     public UserResponse(User user) {

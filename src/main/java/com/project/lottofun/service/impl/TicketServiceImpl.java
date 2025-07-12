@@ -136,11 +136,7 @@ public class TicketServiceImpl implements TicketService {
 
     private void validateNumbers(Set<Integer> numbers) {
         if (numbers == null || numbers.size() != 5) {
-            throw new IllegalArgumentException("Exactly 5 numbers must be selected");
-        }
-        Set<Integer> unique = new HashSet<>(numbers);
-        if (unique.size() != 5) {
-            throw new IllegalArgumentException("Numbers must be unique");
+            throw new IllegalArgumentException("Exactly 5 unique numbers must be selected ");
         }
         for (Integer num : numbers) {
             if (num < 1 || num > 49) {
