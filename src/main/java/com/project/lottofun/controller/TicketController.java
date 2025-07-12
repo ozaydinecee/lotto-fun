@@ -46,4 +46,9 @@ public class TicketController {
         ApiResponse<List<TicketResponse>> response = ticketService.getTicketsByDraw(drawNumber);
         return ResponseEntity.ok(response);
     }
+    @GetMapping("/active-draw/{userId}")
+    public ResponseEntity<ApiResponse<List<TicketResponse>>> getTicketsForActiveDraw(@PathVariable Long userId) {
+        ApiResponse<List<TicketResponse>> response = ticketService.getTicketsForActiveDraw(userId);
+        return ResponseEntity.ok(response);
+    }
 }

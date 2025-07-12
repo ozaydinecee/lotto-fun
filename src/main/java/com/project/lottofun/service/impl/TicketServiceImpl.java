@@ -42,7 +42,7 @@ public class TicketServiceImpl implements TicketService {
     }
     @Override
     public ApiResponse<TicketResponse> purchaseTicket(Long userId, TicketPurchaseRequest request) {
-        Draw activeDraw = drawService.getActiveDraw();
+        Draw activeDraw = drawService.getActiveDrawForPurchase();
         drawLifecycleValidator.validateForTicketPurchase(activeDraw);
 
         User user = getUser(userId);
@@ -78,6 +78,28 @@ public class TicketServiceImpl implements TicketService {
         return new ApiResponse<>(true, "Tickets for draw retrieved", responses);
     }
 
+    /**
+     * Retrieves all tickets purchased by a specific user for the currently active draw
+     * that is available for ticket purchase (DRAW_OPEN and not expired).
+     *
+     * @param userId ID of the user whose tickets are being retrieved
+     * @return ApiResponse containing a list of TicketResponse for the active draw
+     */
+    @Override
+    public ApiResponse<List<TicketResponse>> getTicketsForActiveDraw(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+
+        Draw activeDraw = drawService.getActiveDraw();
+
+        List<Ticket> tickets = ticketRepository.findAllByUserAndDraw(user, activeDraw);
+
+        List<TicketResponse> responses = tickets.stream()
+                .map(TicketResponse::new)
+                .toList();
+
+        return new ApiResponse<>(true, "User's tickets for active draw retrieved", responses);
+    }
 
     private User getUser(Long userId) {
         return userRepository.findById(userId)

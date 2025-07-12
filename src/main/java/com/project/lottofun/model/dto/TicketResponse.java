@@ -43,5 +43,9 @@ public class TicketResponse {
             }
         }
     }
+    /*
+    public static TicketResponse fromEntity(Ticket ticket) {
+        return new TicketResponse(ticket);
+    }*/
 }
 

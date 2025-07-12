@@ -19,7 +19,7 @@ public class DrawInitializer {
     @PostConstruct
     public void init() {
         if (drawRepository.count() == 0) {
-            Draw initialDraw = drawFactory.createInitialDraw(); // örneğin drawId = 1, drawDate = now.plusMinutes(5)
+            Draw initialDraw = drawFactory.createInitialDraw(); // ex: drawId = 1, drawDate = now.plusMinutes(5)
             drawRepository.save(initialDraw);
         }
     }

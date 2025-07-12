@@ -8,11 +8,6 @@ import java.math.BigDecimal;
 
 @Service
 public class DefaultPrizeCalculationStrategy implements PrizeCalculationStrategy {
-/**
- * | Anotasyon    | Ne zaman kullanılır?                                                        |
- * | ------------ | --------------------------------------------------------------------------- |
- * | `@Component` | Generic sınıflar, helper'lar, strateji implementasyonları, utility sınıflar |
- * | `@Service`   | İş katmanı (business logic) sınıfları – service layer'lar                   |*/
     @Override
     public PrizeType calculatePrize(int matchCount) {
         return switch (matchCount) {
@@ -25,6 +20,9 @@ public class DefaultPrizeCalculationStrategy implements PrizeCalculationStrategy
     }
 
     @Override
+    /*
+     * prize calculated as fixed amount
+     * */
     public BigDecimal calculatePrizeAmount(PrizeType prizeType) {
         return switch (prizeType) {
             case JACKPOT -> new BigDecimal("1000000");

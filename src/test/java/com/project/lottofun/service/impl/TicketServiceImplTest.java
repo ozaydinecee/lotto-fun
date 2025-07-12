@@ -76,7 +76,7 @@ class TicketServiceImplTest {
         Set<Integer> numbers = Set.of(5, 12, 23, 37, 48);
         TicketPurchaseRequest request = new TicketPurchaseRequest(numbers);
 
-        when(drawService.getActiveDraw()).thenReturn(testDraw);
+        when(drawService.getActiveDrawForPurchase()).thenReturn(testDraw);
 
         when(userRepository.findById(1L)).thenReturn(Optional.of(testUser));
         Mockito.doNothing().when(drawLifecycleValidator).validateForTicketPurchase(any());
@@ -110,7 +110,7 @@ class TicketServiceImplTest {
     void purchaseTicket_insufficientBalance_throwsException() {
         testUser.setBalance(new BigDecimal("5.00")); // < 10
 
-        when(drawService.getActiveDraw()).thenReturn(testDraw);
+        when(drawService.getActiveDrawForPurchase()).thenReturn(testDraw);
 
         when(userRepository.findById(1L)).thenReturn(Optional.of(testUser));
 
@@ -127,7 +127,7 @@ class TicketServiceImplTest {
         Set<Integer> invalid = Set.of(1, 2, 3, 4); // less than 5
         TicketPurchaseRequest request = new TicketPurchaseRequest(invalid);
 
-        when(drawService.getActiveDraw()).thenReturn(testDraw);
+        when(drawService.getActiveDrawForPurchase()).thenReturn(testDraw);
 
         when(userRepository.findById(1L)).thenReturn(Optional.of(testUser));
 

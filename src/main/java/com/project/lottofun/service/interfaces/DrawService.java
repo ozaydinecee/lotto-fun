@@ -18,7 +18,14 @@ public interface DrawService {
     void executeDrawIfDue();
 
     ApiResponse<DrawResponse> getActiveDrawInfo();
+    /**
+     * Returns the current draw for ticket purchase
+     */
+    Draw getActiveDrawForPurchase();
 
+    /**
+     * Returns the current draw with status DRAW_OPEN
+     */
     Draw getActiveDraw();
 
 }

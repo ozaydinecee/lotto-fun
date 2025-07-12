@@ -11,12 +11,9 @@ import java.util.List;
 @Repository
 public interface TicketRepository extends JpaRepository<Ticket, Long> {
 
-    List<Ticket> findByUser(User user);
-
-    List<Ticket> findByDraw(Draw draw);
-
-    List<Ticket> findByDrawAndUser(Draw draw, User user);
     List<Ticket> findAllByUser(User user);
 
     List<Ticket> findAllByDraw(Draw draw);
+    List<Ticket> findAllByUserAndDraw(User user, Draw draw);
+
 }

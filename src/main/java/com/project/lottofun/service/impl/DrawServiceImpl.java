@@ -129,7 +129,7 @@ public class DrawServiceImpl implements DrawService {
         }
     }
     private TicketStatus mapPrizeTypeToTicketStatus(PrizeType prizeType) {
-        return prizeType == PrizeType.NO_PRIZE ? TicketStatus.NOT_WON : TicketStatus.WON;
+        return prizeType == PrizeType.NO_PRIZE ? TicketStatus.NOT_WON : TicketStatus.WON; // ticket life cycle
     }
     private void markDrawAsFinalized(Draw draw) {
         draw.setStatus(DrawStatus.DRAW_FINALIZED);
@@ -137,7 +137,7 @@ public class DrawServiceImpl implements DrawService {
         log.info("Dra");
     }
     @Override
-    public Draw getActiveDraw() {
+    public Draw getActiveDrawForPurchase() {
         Draw draw= drawRepository.findTopByStatusOrderByDrawDateAsc(DrawStatus.DRAW_OPEN)
                 .orElseThrow(() -> new IllegalStateException("No active draw available"));
         if (draw.getDrawDate().isBefore(LocalDateTime.now())) {
@@ -145,6 +145,12 @@ public class DrawServiceImpl implements DrawService {
         }
         log.info("active draw draw id :{} draw tickets : {} draw date:{}", draw.getId(),draw.getTickets(),draw.getDrawDate());
         return draw;
+    }
+
+    @Override
+    public Draw getActiveDraw() {
+        return drawRepository.findTopByStatusOrderByDrawDateAsc(DrawStatus.DRAW_OPEN)
+                .orElseThrow(() -> new IllegalStateException("No active draw available"));
     }
 
     @Override
