@@ -2,6 +2,8 @@ package com.project.lottofun.service.impl;
 
 import com.project.lottofun.exception.DrawExecutionException;
 import com.project.lottofun.factory.DrawFactory;
+import com.project.lottofun.model.dto.ApiResponse;
+import com.project.lottofun.model.dto.DrawResponse;
 import com.project.lottofun.model.entity.Draw;
 import com.project.lottofun.model.entity.Ticket;
 import com.project.lottofun.model.enums.DrawStatus;
@@ -133,6 +135,23 @@ public class DrawServiceImpl implements DrawService {
         draw.setStatus(DrawStatus.DRAW_FINALIZED);
         drawRepository.save(draw);
         log.info("Dra");
+    }
+    @Override
+    public Draw getActiveDraw() {
+        Draw draw= drawRepository.findTopByStatusOrderByDrawDateAsc(DrawStatus.DRAW_OPEN)
+                .orElseThrow(() -> new IllegalStateException("No active draw available"));
+        if (draw.getDrawDate().isBefore(LocalDateTime.now())) {
+            throw new IllegalStateException("Draw is closed. Ticket purchase is not allowed.");
+        }
+        log.info("active draw draw id :{} draw tickets : {} draw date:{}", draw.getId(),draw.getTickets(),draw.getDrawDate());
+        return draw;
+    }
+
+    @Override
+    public ApiResponse<DrawResponse> getActiveDrawInfo() {
+        Draw draw = getActiveDraw();
+        DrawResponse response = new DrawResponse(draw);
+        return new ApiResponse<>(true, "Active draw retrieved", response);
     }
 
 
