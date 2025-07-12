@@ -12,4 +12,8 @@ public interface TicketService {
 
     ApiResponse<List<TicketResponse>> getTicketsByDraw(Integer drawNumber);
     ApiResponse<List<TicketResponse>> getTicketsForActiveDraw(Long userId);
+    ApiResponse<List<TicketResponse>> getTopWinnersByDraw(Integer drawNumber);
+    ApiResponse<List<TicketResponse>> getTicketsByUserAndDraw(Long userId, Integer drawNumber);
+
+
 }

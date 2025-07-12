@@ -7,10 +7,7 @@ import com.project.lottofun.model.dto.UserResponse;
 import com.project.lottofun.model.entity.User;
 import com.project.lottofun.service.interfaces.UserService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/users")
@@ -31,6 +28,10 @@ public class UserController {
     public ResponseEntity<ApiResponse<UserResponse>> login(@RequestBody UserLoginRequest request) {
         return ResponseEntity.ok(userService.loginAndRespond(request));
     }
-
+    @GetMapping("/{userId}/details")
+    public ResponseEntity<ApiResponse<UserResponse>> getUserDetails(@PathVariable Long userId) {
+        ApiResponse<UserResponse> response = userService.getUserDetails(userId);
+        return ResponseEntity.ok(response);
+    }
 
 }

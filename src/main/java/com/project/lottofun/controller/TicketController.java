@@ -21,7 +21,7 @@ public class TicketController {
     /**
      * Allows a user to purchase a ticket for an active draw.
      */
-    @PostMapping("/purchase/{userId}")
+    @PostMapping("/users/{userId}/purchase")
     public ResponseEntity<ApiResponse<TicketResponse>> purchaseTicket(
             @PathVariable Long userId,
             @RequestBody TicketPurchaseRequest request) {
@@ -46,9 +46,21 @@ public class TicketController {
         ApiResponse<List<TicketResponse>> response = ticketService.getTicketsByDraw(drawNumber);
         return ResponseEntity.ok(response);
     }
-    @GetMapping("/active-draw/{userId}")
+    @GetMapping("/users/{userId}/active-draw")
     public ResponseEntity<ApiResponse<List<TicketResponse>>> getTicketsForActiveDraw(@PathVariable Long userId) {
         ApiResponse<List<TicketResponse>> response = ticketService.getTicketsForActiveDraw(userId);
+        return ResponseEntity.ok(response);
+    }
+    @GetMapping("/draws/{drawNumber}/top-winners")
+    public ResponseEntity<ApiResponse<List<TicketResponse>>> getTopWinners(@PathVariable Integer drawNumber) {
+        ApiResponse<List<TicketResponse>> response = ticketService.getTopWinnersByDraw(drawNumber);
+        return ResponseEntity.ok(response);
+    }
+    @GetMapping("/users/{userId}/draws/{drawNumber}")
+    public ResponseEntity<ApiResponse<List<TicketResponse>>> getTicketsByUserAndDraw(
+            @PathVariable Long userId,
+            @PathVariable Integer drawNumber) {
+        ApiResponse<List<TicketResponse>> response = ticketService.getTicketsByUserAndDraw(userId, drawNumber);
         return ResponseEntity.ok(response);
     }
 }

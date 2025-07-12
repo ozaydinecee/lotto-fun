@@ -10,4 +10,6 @@ public interface UserService {
     ApiResponse<UserResponse> registerAndRespond(UserRegisterRequest request);
 
     ApiResponse<UserResponse> loginAndRespond(UserLoginRequest request);
+    ApiResponse<UserResponse> getUserDetails(Long userId);
+
 }

@@ -21,5 +21,6 @@ public class DrawScheduler {
     public void handleDrawExecution() {
         log.info("Draw Execution job started...");
         drawService.executeDrawIfDue();
+        log.info("Draw Execution job ended...");
     }
 }

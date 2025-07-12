@@ -4,8 +4,11 @@ import com.project.lottofun.model.dto.ApiResponse;
 import com.project.lottofun.model.dto.DrawResponse;
 import com.project.lottofun.model.entity.Draw;
 
-public interface DrawService {
+import java.util.List;
 
+public interface DrawService {
+    ApiResponse<List<DrawResponse>> getAllDraws();
+    ApiResponse<DrawResponse> getDrawByNumber(Integer drawNumber);
     /**
      * Execute draw if a scheduled draw is due.
      * This includes:
@@ -28,4 +31,5 @@ public interface DrawService {
      */
     Draw getActiveDraw();
 
+    ApiResponse<List<DrawResponse>> getExtractedDraws();
 }

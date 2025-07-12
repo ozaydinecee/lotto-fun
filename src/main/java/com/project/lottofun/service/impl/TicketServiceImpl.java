@@ -101,6 +101,34 @@ public class TicketServiceImpl implements TicketService {
         return new ApiResponse<>(true, "User's tickets for active draw retrieved", responses);
     }
 
+    @Override
+    public ApiResponse<List<TicketResponse>> getTopWinnersByDraw(Integer drawNumber) {
+        Draw draw = drawRepository.findByDrawNumber(drawNumber)
+                .orElseThrow(() -> new IllegalArgumentException("Draw not found"));
+        //tickets which wons prize
+        List<Ticket> winningTickets = ticketRepository
+                .findByDraw_DrawNumberAndPrizeAmountGreaterThanOrderByPrizeAmountDesc(drawNumber, BigDecimal.ZERO);
+
+        List<TicketResponse> responses = winningTickets.stream()
+                .map(TicketResponse::new)
+                .toList();
+
+        return new ApiResponse<>(true, "Top winners retrieved", responses);
+    }
+
+    @Override
+    public ApiResponse<List<TicketResponse>> getTicketsByUserAndDraw(Long userId, Integer drawNumber) {
+        List<Ticket> tickets = ticketRepository
+                .findByUser_IdAndDraw_DrawNumberOrderByPurchaseTimeDesc(userId, drawNumber);
+
+        List<TicketResponse> responses = tickets.stream()
+                .map(TicketResponse::new)
+                .toList();
+
+        return new ApiResponse<>(true, "Tickets retrieved", responses);
+    }
+
+
     private User getUser(Long userId) {
         return userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));

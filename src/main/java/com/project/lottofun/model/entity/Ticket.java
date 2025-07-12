@@ -33,6 +33,7 @@ public class Ticket {
     @ElementCollection
     private Set<Integer> selectedNumbers;
 
+    @Column(nullable = false)
     private LocalDateTime purchaseTime;
 
     private Integer matchCount;

@@ -12,9 +12,10 @@ import java.util.Optional;
 @Repository
 public interface DrawRepository extends JpaRepository<Draw, Long> {
 
+    List<Draw> findAllByOrderByDrawDateDesc();
     Optional<Draw> findByDrawNumber(Integer drawNumber);
 
-    Optional<Draw> findTopByOrderByDrawNumberDesc();
+    List<Draw> findByStatusInOrderByDrawDateDesc(List<DrawStatus> statuses);
 
     Optional<Draw> findTopByStatusOrderByDrawDateAsc(DrawStatus status);
 

@@ -24,6 +24,8 @@ public class TicketResponse {
     private Set<Integer> winningNumbers;
     private Integer matchCount;
     private String drawStatus;
+
+    private String username;
     public TicketResponse(Ticket ticket) {
         this.ticketId = ticket.getId();
         this.ticketNumber = ticket.getTicketNumber();
@@ -32,6 +34,7 @@ public class TicketResponse {
         this.purchaseTime = ticket.getPurchaseTime();
         this.prizeAmount = ticket.getPrizeAmount();
         this.status = String.valueOf(ticket.getStatus());
+        this.username = ticket.getUser().getUsername();
 
         if (ticket.getDraw() != null) {
             this.drawStatus = String.valueOf(ticket.getDraw().getStatus());
