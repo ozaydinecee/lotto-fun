@@ -22,7 +22,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"username\": \"eerdogan\",\r\n  \"password\": \"1234\"\r\n}",
+							"raw": "{\r\n  \"username\": \"newCommerr\",\r\n  \"password\": \"1234\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -30,15 +30,13 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/api/users/register",
-							"protocol": "http",
+							"raw": "{{baseUrl}}/api/auth/register",
 							"host": [
-								"localhost"
+								"{{baseUrl}}"
 							],
-							"port": "8080",
 							"path": [
 								"api",
-								"users",
+								"auth",
 								"register"
 							]
 						}
@@ -47,6 +45,21 @@
 				},
 				{
 					"name": "login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let json = pm.response.json();\r",
+									"if (json.token) {\r",
+									"  pm.environment.set(\"authToken\", json.token);\r",
+									"}"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
 					"request": {
 						"method": "POST",
 						"header": [
@@ -66,15 +79,13 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/api/users/login",
-							"protocol": "http",
+							"raw": "{{baseUrl}}/api/auth/login",
 							"host": [
-								"localhost"
+								"{{baseUrl}}"
 							],
-							"port": "8080",
 							"path": [
 								"api",
-								"users",
+								"auth",
 								"login"
 							]
 						}
@@ -85,9 +96,15 @@
 					"name": "user detail",
 					"request": {
 						"method": "GET",
-						"header": [],
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}",
+								"type": "text"
+							}
+						],
 						"url": {
-							"raw": "http://localhost:8080/api/users/1/details",
+							"raw": "http://localhost:8080/api/users/7/details",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -96,7 +113,7 @@
 							"path": [
 								"api",
 								"users",
-								"1",
+								"7",
 								"details"
 							]
 						}
@@ -110,6 +127,43 @@
 			"item": [
 				{
 					"name": "purchase ticket for user",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"/*\r",
+									"Example response\r",
+									"{\r",
+									"    \"success\": true,\r",
+									"    \"message\": \"Ticket purchased successfully\",\r",
+									"    \"data\": {\r",
+									"        \"ticketId\": 11,\r",
+									"        \"drawNumber\": 6,\r",
+									"        \"selectedNumbers\": [\r",
+									"            34,\r",
+									"            35,\r",
+									"            7,\r",
+									"            11,\r",
+									"            47\r",
+									"        ],\r",
+									"        \"purchaseTime\": \"2025-07-12T15:49:20.1726527\",\r",
+									"        \"prizeAmount\": null,\r",
+									"        \"status\": \"PENDING\",\r",
+									"        \"ticketNumber\": \"hozaydin-6-1752324560168\",\r",
+									"        \"winningNumbers\": [],\r",
+									"        \"matchCount\": 0,\r",
+									"        \"drawStatus\": \"DRAW_OPEN\",\r",
+									"        \"username\": \"hozaydin\"\r",
+									"    }\r",
+									"}*/\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
 					"request": {
 						"method": "POST",
 						"header": [
@@ -117,11 +171,16 @@
 								"key": "Accept",
 								"value": "application/json",
 								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}",
+								"type": "text"
 							}
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"numbers\": [5, 12, 23, 37, 13]\r\n}",
+							"raw": "{\r\n  \"numbers\": [7, 47, 14,13,45]\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -129,7 +188,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/api/tickets/users/1/purchase",
+							"raw": "http://localhost:8080/api/tickets/users/4/purchase",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -139,7 +198,7 @@
 								"api",
 								"tickets",
 								"users",
-								"1",
+								"4",
 								"purchase"
 							]
 						}
@@ -148,11 +207,60 @@
 				},
 				{
 					"name": "gel all tickets for draw",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"/*\r",
+									"Example response \r",
+									"{\r",
+									"    \"success\": true,\r",
+									"    \"message\": \"Ticket purchased successfully\",\r",
+									"    \"data\": {\r",
+									"        \"ticketId\": 11,\r",
+									"        \"drawNumber\": 6,\r",
+									"        \"selectedNumbers\": [\r",
+									"            34,\r",
+									"            35,\r",
+									"            7,\r",
+									"            11,\r",
+									"            47\r",
+									"        ],\r",
+									"        \"purchaseTime\": \"2025-07-12T15:49:20.1726527\",\r",
+									"        \"prizeAmount\": null,\r",
+									"        \"status\": \"PENDING\",\r",
+									"        \"ticketNumber\": \"hozaydin-6-1752324560168\",\r",
+									"        \"winningNumbers\": [],\r",
+									"        \"matchCount\": 0,\r",
+									"        \"drawStatus\": \"DRAW_OPEN\",\r",
+									"        \"username\": \"hozaydin\"\r",
+									"    }\r",
+									"}*/"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
 					"request": {
 						"method": "GET",
-						"header": [],
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}",
+								"type": "text",
+								"disabled": true
+							},
+							{
+								"key": "",
+								"value": "",
+								"type": "text",
+								"disabled": true
+							}
+						],
 						"url": {
-							"raw": "http://localhost:8080/api/tickets/draws/2",
+							"raw": "http://localhost:8080/api/tickets/draws/3",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -162,7 +270,7 @@
 								"api",
 								"tickets",
 								"draws",
-								"2"
+								"3"
 							]
 						}
 					},
@@ -170,12 +278,82 @@
 				},
 				{
 					"name": "get all tickets for user",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"/*\r",
+									"Example Response:\r",
+									"{\r",
+									"    \"success\": true,\r",
+									"    \"message\": \"User's tickets retrieved\",\r",
+									"    \"data\": [\r",
+									"        {\r",
+									"            \"ticketId\": 10,\r",
+									"            \"drawNumber\": 3,\r",
+									"            \"selectedNumbers\": [\r",
+									"                34,\r",
+									"                35,\r",
+									"                7,\r",
+									"                11,\r",
+									"                47\r",
+									"            ],\r",
+									"            \"purchaseTime\": \"2025-07-12T15:00:16.148603\",\r",
+									"            \"prizeAmount\": 0.00,\r",
+									"            \"status\": \"NOT_WON\",\r",
+									"            \"ticketNumber\": \"hozaydin-3-1752321616148\",\r",
+									"            \"winningNumbers\": [\r",
+									"                35,\r",
+									"                19,\r",
+									"                8,\r",
+									"                28,\r",
+									"                44\r",
+									"            ],\r",
+									"            \"matchCount\": 1,\r",
+									"            \"drawStatus\": \"DRAW_FINALIZED\",\r",
+									"            \"username\": \"hozaydin\"\r",
+									"        },\r",
+									"        {\r",
+									"            \"ticketId\": 11,\r",
+									"            \"drawNumber\": 6,\r",
+									"            \"selectedNumbers\": [\r",
+									"                34,\r",
+									"                35,\r",
+									"                7,\r",
+									"                11,\r",
+									"                47\r",
+									"            ],\r",
+									"            \"purchaseTime\": \"2025-07-12T15:49:20.172653\",\r",
+									"            \"prizeAmount\": null,\r",
+									"            \"status\": \"PENDING\",\r",
+									"            \"ticketNumber\": \"hozaydin-6-1752324560168\",\r",
+									"            \"winningNumbers\": [],\r",
+									"            \"matchCount\": 0,\r",
+									"            \"drawStatus\": \"DRAW_OPEN\",\r",
+									"            \"username\": \"hozaydin\"\r",
+									"        }\r",
+									"    ]\r",
+									"}\r",
+									" */"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
 					},
 					"request": {
 						"method": "GET",
-						"header": [],
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}",
+								"type": "text"
+							}
+						],
 						"body": {
 							"mode": "raw",
 							"raw": "",
@@ -186,7 +364,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/api/tickets/users/1",
+							"raw": "http://localhost:8080/api/tickets/users/4",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -196,7 +374,7 @@
 								"api",
 								"tickets",
 								"users",
-								"1"
+								"4"
 							]
 						}
 					},
@@ -208,7 +386,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/api/tickets/users/3/active-draw",
+							"raw": "http://localhost:8080/api/tickets/users/7/active-draw",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -218,7 +396,7 @@
 								"api",
 								"tickets",
 								"users",
-								"3",
+								"7",
 								"active-draw"
 							]
 						}
@@ -229,9 +407,15 @@
 					"name": "user's ticket for draw",
 					"request": {
 						"method": "GET",
-						"header": [],
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}",
+								"type": "text"
+							}
+						],
 						"url": {
-							"raw": "http://localhost:8080/api/tickets/users/{userId}/draws/{drawNumber}",
+							"raw": "http://localhost:8080/api/tickets/users/3/draws/3",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -241,9 +425,9 @@
 								"api",
 								"tickets",
 								"users",
-								"{userId}",
+								"3",
 								"draws",
-								"{drawNumber}"
+								"3"
 							]
 						}
 					},
@@ -255,7 +439,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/api/tickets/draws/1/top-winners",
+							"raw": "http://localhost:8080/api/tickets/draws/3/top-winners",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -265,7 +449,7 @@
 								"api",
 								"tickets",
 								"draws",
-								"1",
+								"3",
 								"top-winners"
 							]
 						}
@@ -278,10 +462,109 @@
 			"name": "draws",
 			"item": [
 				{
-					"name": "get active draw",
+					"name": "get all draws",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"/*\r",
+									"Example Response:\r",
+									"{\r",
+									"    \"success\": true,\r",
+									"    \"message\": \"All draws retrieved\",\r",
+									"    \"data\": [\r",
+									"        {\r",
+									"            \"drawId\": 3,\r",
+									"            \"drawNumber\": 3,\r",
+									"            \"drawDate\": \"2025-07-12T15:05:01.847135\",\r",
+									"            \"status\": \"DRAW_OPEN\",\r",
+									"            \"ticketCount\": 5\r",
+									"        },\r",
+									"        {\r",
+									"            \"drawId\": 2,\r",
+									"            \"drawNumber\": 2,\r",
+									"            \"drawDate\": \"2025-07-11T21:36:23.103645\",\r",
+									"            \"status\": \"DRAW_FINALIZED\",\r",
+									"            \"ticketCount\": 3\r",
+									"        },\r",
+									"        {\r",
+									"            \"drawId\": 1,\r",
+									"            \"drawNumber\": 1,\r",
+									"            \"drawDate\": \"2025-07-09T23:13:32.661166\",\r",
+									"            \"status\": \"DRAW_FINALIZED\",\r",
+									"            \"ticketCount\": 2\r",
+									"        }\r",
+									"    ]\r",
+									"} */"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
 					"request": {
 						"method": "GET",
-						"header": [],
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8080/api/draws",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"draws"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get active draw",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"/*\r",
+									"Example response:\r",
+									"{\r",
+									"    \"success\": true,\r",
+									"    \"message\": \"Active draw retrieved\",\r",
+									"    \"data\": {\r",
+									"        \"drawId\": 6,\r",
+									"        \"drawNumber\": 6,\r",
+									"        \"drawDate\": \"2025-07-12T15:59:19.075034\",\r",
+									"        \"status\": \"DRAW_OPEN\",\r",
+									"        \"ticketCount\": 1,\r",
+									"        \"winningNumbers\": []\r",
+									"    }\r",
+									"}*/"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}",
+								"type": "text",
+								"disabled": true
+							}
+						],
 						"url": {
 							"raw": "http://localhost:8080/api/draws/active",
 							"protocol": "http",
@@ -299,27 +582,38 @@
 					"response": []
 				},
 				{
-					"name": "get all draws",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "http://localhost:8080/api/draws",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "8080",
-							"path": [
-								"api",
-								"draws"
-							]
-						}
-					},
-					"response": []
-				},
-				{
 					"name": "get draw detail by id",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"/*\r",
+									"Example Response:\r",
+									"{\r",
+									"    \"success\": true,\r",
+									"    \"message\": \"Draw retrieved\",\r",
+									"    \"data\": {\r",
+									"        \"drawId\": 1,\r",
+									"        \"drawNumber\": 1,\r",
+									"        \"drawDate\": \"2025-07-09T23:13:32.661166\",\r",
+									"        \"status\": \"DRAW_FINALIZED\",\r",
+									"        \"ticketCount\": 2,\r",
+									"        \"winningNumbers\": [\r",
+									"            32,\r",
+									"            36,\r",
+									"            37,\r",
+									"            7,\r",
+									"            43\r",
+									"        ]\r",
+									"    }\r",
+									"}*/"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
 					"request": {
 						"method": "GET",
 						"header": [],
@@ -341,9 +635,56 @@
 				},
 				{
 					"name": "get extracted draw history",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"/*\r",
+									"Example Response:\r",
+									"{\r",
+									"    \"success\": true,\r",
+									"    \"message\": \"Completed draws listed\",\r",
+									"    \"data\": [\r",
+									"        {\r",
+									"            \"drawId\": 3,\r",
+									"            \"drawNumber\": 3,\r",
+									"            \"drawDate\": \"2025-07-12T15:05:01.847135\",\r",
+									"            \"status\": \"DRAW_FINALIZED\",\r",
+									"            \"ticketCount\": 5\r",
+									"        },\r",
+									"        {\r",
+									"            \"drawId\": 2,\r",
+									"            \"drawNumber\": 2,\r",
+									"            \"drawDate\": \"2025-07-11T21:36:23.103645\",\r",
+									"            \"status\": \"DRAW_FINALIZED\",\r",
+									"            \"ticketCount\": 3\r",
+									"        },\r",
+									"        {\r",
+									"            \"drawId\": 1,\r",
+									"            \"drawNumber\": 1,\r",
+									"            \"drawDate\": \"2025-07-09T23:13:32.661166\",\r",
+									"            \"status\": \"DRAW_FINALIZED\",\r",
+									"            \"ticketCount\": 2\r",
+									"        }\r",
+									"    ]\r",
+									"} */"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
 					"request": {
 						"method": "GET",
-						"header": [],
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}",
+								"type": "text",
+								"disabled": true
+							}
+						],
 						"url": {
 							"raw": "http://localhost:8080/api/draws/history",
 							"protocol": "http",

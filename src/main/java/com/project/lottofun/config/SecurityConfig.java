@@ -44,7 +44,8 @@ public class SecurityConfig {
                         // protect result check endponts
                         .requestMatchers(HttpMethod.GET,
                                 "/api/tickets/users/*",
-                                "/api/tickets/users/*/draws/*"
+                                "/api/tickets/users/*/draws/*",
+                                "/api/users/*/details"
                         ).authenticated()
                         // permit remaining
                         .anyRequest().permitAll()
