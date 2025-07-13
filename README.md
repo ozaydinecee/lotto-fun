@@ -700,7 +700,6 @@ For questions, issues, or contributions, please contact.
 
 **Email**: ozaydinecee@gmail.com
 **Phone Number**: +905466213099
-
 **Project Version**: 1.0  
 **Last Updated**: January 2024  
 **License**: MIT License 
