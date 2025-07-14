@@ -42,7 +42,6 @@ LottoFun is a comprehensive lottery management system built with **Spring Boot 3
 
 ### High-Level Architecture
 
-LottoFun implements a **JWT-based stateless authentication system** with role-based access control.
 ```mermaid
 graph TB
     subgraph "🌐 Client Applications"
